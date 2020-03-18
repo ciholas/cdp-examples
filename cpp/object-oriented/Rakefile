@@ -1,0 +1,120 @@
+# Ciholas, Inc. - www.ciholas.com
+# Licensed under: creativecommons.org/licenses/by/4.0
+###################
+# import subrakes #
+###################
+Dir.glob('**/*.rake').sort{|a,b| [a.split('/').size,a] <=> [b.split('/').size,b]}.each{|r| import r unless r =~ /^(git|svn)?lib\// }
+
+###################
+# configuration   #
+###################
+ROOT_DIR = File.dirname(__FILE__)
+SRC_ROOT_DIR = 'src'
+RAKE_CONFIG_FILES = [ '.rakerc', 'rake.conf' ]
+verbose(false)
+
+###################
+# helper methods  #
+###################
+#allow for simple changing of the root directory
+class FileList
+  def root(newroot,depth=1)
+    self.map { |x| x.root(newroot,depth) }
+  end
+end
+class String
+  def root(newroot,depth=1)
+    if self =~ /^#{ROOT_DIR}/
+      File.join(ROOT_DIR, self.sub(/#{ROOT_DIR}\//,'').root(newroot,depth))
+    else
+      self.sub(/^([^\/]+\/){#{depth}}/,"#{newroot}/")
+    end
+  end
+  def dir
+    self.sub(/\/[^\/]+$/,'')
+  end
+  def camelcase
+    self.split(/[-_\/]/).map{|x| x[0,1].upcase + x[1..-1].downcase}.join("")
+  end
+  def classify
+    Object.const_get self.camelcase
+  end
+  def filename
+    self.sub(/.*\//,'')
+  end
+end
+#builds directory for file
+def dirfor(file)
+  mkdir_p file.pathmap("%d")
+end
+#concats commands together to make it easier to run parallel builds
+def sh_runner(*cmds)
+    sh cmds.to_a.join(" && ")
+end
+#fetch options from config files
+def src_config_option(name,options={})
+  if options[:file_list]
+    rv = []
+    options[:concat] = true
+  elsif options[:concat]
+    rv = ""
+  end
+  RAKE_CONFIG_FILES.each do |rcf|
+    if File.exist?(rcf)
+      File.open(rcf, 'r').each_line do |line|
+        if line =~ /^#{name}:.+/
+          config = line.sub(/^[^:]*:/,'').strip.chomp+" "
+          if options[:increment]
+            config = config.to_i
+            if options[:increment].include?(config)
+              config += 1
+              if config > options[:increment].end
+                config = options[:increment].begin
+              end
+              `sed -i 's/^#{name}:.*$/#{name}:#{config.to_s}/g' #{rcf}`
+            end
+          elsif options[:file_list]
+            fl = FileList[]
+            config.split(';').each{ |rs| fl << Regexp.new(rs.strip) }
+            config = fl
+          end
+          if options[:concat]
+            rv += config
+          else
+            config.strip! if config.kind_of?(String)
+            return config
+          end
+        end
+      end
+    end
+  end
+  if options[:concat] and rv != ""
+    rv.strip! if rv.kind_of?(String)
+    return rv
+  elsif options[:force]
+    `echo #{name}:#{options[:force]} >> #{RAKE_CONFIG_FILES.first}`
+    return options[:force]
+  end
+  return options[:default]
+end
+
+###################
+# Color helpers   #
+###################
+class Display
+  if ENV["TERM"] == "dumb"
+    RED=""
+    GREEN=""
+    NONE=BLANK=""
+    YELLOW=""
+    BLUE=""
+    CYAN=""
+  else
+    RED="\033[1;31m"
+    GREEN="\033[1;32m"
+    NONE=BLANK="\033[0m"
+    YELLOW="\033[1;33m"
+    BLUE="\033[1;34m"
+    CYAN="\033[1;36m"
+  end
+end
