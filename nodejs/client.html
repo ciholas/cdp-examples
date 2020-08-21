@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+    <title>CDP NodeJS Websocket Example</title>
+
+    <style>
+      div.position { display: block; }
+      div.position div { display: inline-block; padding: 0.1em 0.2em; }
+      div#explanation { margin: 3em 0; }
+      div#position-header { font-weight: 800; }
+      div.serial-number { width: 10em; text-align: center; }
+      div.axis { width: 10em; text-align: center; }
+      div.network-time { width: 10em; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <h1>CDP NodeJS Websocket Example - Positions</h1>
+    <div id=explanation>
+      This is an example from <a href=https://github.com/ciholas>Ciholas, Inc.</a> on how to use NodeJS for websockets and parse CDP data from the <a href=https://cuwb.io>CUWB Network</a>.
+    </div>
+    <div id=position-header class=position>
+      <div class=serial-number>Serial Number</div>
+      <div class=axis>X (meters)</div>
+      <div class=axis>Y (meters)</div>
+      <div class=axis>Z (meters)</div>
+      <div class=network-time>Network Time</div>
+    </div>
+    <div id=positions></div>
+    <script>
+
+      let positionsToDisplay = 100;
+
+      function millimetersToMeters(mms){
+        return (mms / 1000).toFixed(3);
+      }
+
+      let numPositionsDivChildren = 0;
+
+      const ws = new WebSocket('ws://localhost:9898/');
+      ws.onmessage = (msg) => {
+
+        const positionV3 = JSON.parse(msg.data);
+        const positionsDiv = document.getElementById("positions");
+
+        const content =
+          '<div id=child-'+numPositionsDivChildren+' class=position>'+
+            '<div class=serial-number>'+positionV3.serialNumber+'</div>'+'\n'+
+            '<div class=axis>'+millimetersToMeters(positionV3.positionX)+'</div>'+'\n'+
+            '<div class=axis>'+millimetersToMeters(positionV3.positionY)+'</div>'+'\n'+
+            '<div class=axis>'+millimetersToMeters(positionV3.positionZ)+'</div>'+'\n'+
+            '<div class=network-time>'+positionV3.networkTime+'</div>'+
+          '</div>';
+
+          positionsDiv.innerHTML = content + positionsDiv.innerHTML;
+          numPositionsDivChildren += 1;
+
+          if (numPositionsDivChildren >= positionsToDisplay) {
+            document.getElementById("child-"+(numPositionsDivChildren-positionsToDisplay)).remove();
+          }
+      }
+    </script>
+  </body>
+</html>

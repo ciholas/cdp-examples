@@ -1,0 +1,12 @@
+{
+  "name": "cdp-node-example",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "git@gitlab.ciholas.com:srfaber/nodejs-udp-server.git",
+  "author": "Ciholas, Inc. <cuwb.support@ciholas.com>",
+  "license": "MIT",
+  "dependencies": {
+    "prompt-sync": "^4.2.0",
+    "websocket": "^1.0.31"
+  }
+}
