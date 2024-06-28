@@ -11,7 +11,7 @@
 #define _RECEIVE_BUFFER_SIZE 65536
 
 
-CdpReceiver::CdpReceiver(char * group_string, uint16_t port) {
+CdpReceiver::CdpReceiver(char * group_string, uint16_t port, char * iface_string) {
     __shutting_down = false;
     __id_counter = 0;
 
@@ -42,7 +42,7 @@ CdpReceiver::CdpReceiver(char * group_string, uint16_t port) {
     // Setup the multicast for the GROUP.
     struct ip_mreq multicast_request;
     multicast_request.imr_multiaddr.s_addr=inet_addr(group_string);
-    multicast_request.imr_interface.s_addr=htonl(INADDR_ANY);
+    multicast_request.imr_interface.s_addr=inet_addr(iface_string);
     if (setsockopt(__cdp_socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, &multicast_request, sizeof(multicast_request)) < 0) {
         printf("Error with setsockopt for multicast!\n");
     }

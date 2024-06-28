@@ -4,7 +4,7 @@ This repository contains example code in Ruby, Python, NodeJS, Go, C#, C++ and C
 
 ## Dependencies
 
-To compile the C and C++ examples, gcc and g++ are required respectively. The Python example requires python3. The Ruby example requires ruby. The C# example requires the .NET Core. The Go example requires Go. The NodeJS example uses Node 10 and utilizes websockets.  See the individual README.md files in each example for more specific dependencies.
+To compile the C and C++ examples, gcc and g++ are required respectively. The Python example requires python3. The Ruby example requires ruby. The C# example requires the .NET Core. The Go example requires Go(1.22.3). The NodeJS example uses Node 22.2.0 and utilizes websockets.  See the individual README.md files in each example for more specific dependencies.
 
 ## License
 

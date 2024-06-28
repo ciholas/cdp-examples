@@ -12,6 +12,8 @@
 #define _ARGV_INDEX__GROUP  1
 // Index of the UDP port program argument
 #define _ARGV_INDEX__PORT   2
+// Index of the network interface IP to bind socket to
+#define _ARGV_INDEX__IFACE  3
 #define _PAYLOAD_DATA_SIZE  8
 
 #define _VERSION_STRING     "1.2.128"
@@ -36,16 +38,17 @@ static void _ExamplePositionHandler(const cdp_packet_info_t& packet_info, const 
 // Start of program.
 int main(int argc,char **argv) {
 
-    if (argc != 3) {
-        printf("Usage: %s GROUP PORT\r\n"
+    if (argc != 4) {
+        printf("Usage: %s GROUP PORT IFACE\r\n"
                "   GROUP - IP to listen on (ie: 239.255.76.67)\r\n"
-               "   PORT - Port to listen on (ie: 7667)\r\n", argv[0]);
+               "   PORT - Port to listen on (ie: 7667)\r\n"
+               "    IFACE - IP of network interface to bind socket to (ie: 127.0.0.1)\r\n", argv[0]);
         exit(0);
     }
 
     printf("Started CDP C++ Example Program v%s\n", _VERSION_STRING);
 
-    CdpConnection* cdp_connection = new CdpConnection(argv[_ARGV_INDEX__GROUP], atoi(argv[_ARGV_INDEX__PORT]));
+    CdpConnection* cdp_connection = new CdpConnection(argv[_ARGV_INDEX__GROUP], atoi(argv[_ARGV_INDEX__PORT]), argv[_ARGV_INDEX__IFACE]);
 
     /***********************
      * Example Receive

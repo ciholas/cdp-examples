@@ -12,11 +12,12 @@ g++ -o cdp-cpp-example main.cpp
 
 Run the program with
 ```bash
-./cdp-cpp-example GROUP PORT
+./cdp-cpp-example GROUP PORT IFACE
 ```
 
 GROUP is the multicast IP to listen on  
 PORT is the UDP PORT to listen on
+IFACE is the IP of network interface to bind socket to
 
 
 ## Extending

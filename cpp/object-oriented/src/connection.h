@@ -12,7 +12,7 @@ class CdpPacket;
 class CdpConnection {
 public:
     // Constructs this.
-    explicit CdpConnection(char * multicast_address, uint16_t port);
+    explicit CdpConnection(char * multicast_address, uint16_t port, char * iface_string);
     // Destroys this.
     ~CdpConnection(void);
 

@@ -5,9 +5,9 @@
 #include "receiver.h"
 #include "transmitter.h"
 
-CdpConnection::CdpConnection(char * multicast_address, uint16_t port) {
+CdpConnection::CdpConnection(char * multicast_address, uint16_t port, char * iface_string) {
     mTransmitter = new CdpTransmitter(multicast_address, port);
-    mReceiver = new CdpReceiver(multicast_address, port);
+    mReceiver = new CdpReceiver(multicast_address, port, iface_string);
     mReceiverThread = std::thread(std::bind(&CdpReceiver::Run, mReceiver));
     mReceiverThread.detach();
 }

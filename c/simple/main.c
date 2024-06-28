@@ -51,14 +51,16 @@ typedef struct PACKED CDP_POSITION_V3_T {
 
 int main(int argc,char **argv) {
     // Ensure correct usage of the program
-    if(argc != 3){
+    if(argc != 4){
         printf(
-            "Usage: %s GROUP PORT\r\n"
+            "Usage: %s GROUP PORT IFACE\r\n"
             "    GROUP - IP to listen on (ie: 239.255.76.67)\r\n"
-            "     PORT - Port to listen on (ie: 7667)\r\n", argv[0]);
+            "     PORT - Port to listen on (ie: 7667)\r\n"
+            "    IFACE - IP of network interface to bind socket to (ie: 127.0.0.1)\r\n", argv[0]);
     }
     char * group_string = argv[1];
     uint16_t port = atoi(argv[2]);
+    char * iface_string = argv[3];
 
     printf("Started CDP C Example Program\n");
 
@@ -89,6 +91,7 @@ int main(int argc,char **argv) {
     // Setup the multicast for the GROUP
     struct ip_mreq multicast_request;
     multicast_request.imr_multiaddr.s_addr=inet_addr(group_string);
+    multicast_request.imr_interface.s_addr=inet_addr(iface_string);
     if(setsockopt(cdp_socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, &multicast_request, sizeof(multicast_request)) < 0) {
         printf("Experienced error while setting up multicast.");
         return 1;

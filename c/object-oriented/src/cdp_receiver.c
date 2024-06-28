@@ -32,7 +32,7 @@ static struct {
 /***********************
  * Public Functions
  ***********************/
-void CdpReceiver_Create(char * group_string, uint16_t port) {
+void CdpReceiver_Create(char * group_string, uint16_t port, char * iface_string) {
 
     // Create a socket.
     int cdp_socket;
@@ -55,6 +55,7 @@ void CdpReceiver_Create(char * group_string, uint16_t port) {
     // Setup the multicast for the GROUP.
     struct ip_mreq multicast_request;
     multicast_request.imr_multiaddr.s_addr=inet_addr(group_string);
+    multicast_request.imr_interface.s_addr=inet_addr(iface_string);
     if(setsockopt(cdp_socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, &multicast_request, sizeof(multicast_request)) < 0)
         Print_ExitOnError("setsockopt - multicast");
 

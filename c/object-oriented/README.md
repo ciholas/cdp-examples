@@ -11,11 +11,12 @@ rake clean source
 
 Run the program with
 ```bash
-output/cdp-c-example GROUP PORT
+output/cdp-c-example GROUP PORT IFACE
 ```
 
 GROUP is the multicast IP to listen on  
 PORT is the UDP PORT to listen on
+IFACE is the IP of network interface to bind socket to
 
 ## Extending
 

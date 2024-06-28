@@ -17,7 +17,7 @@ typedef void (*cdp_data_item_handler_t)(cdp_header_t *, void *, uint16_t);
  * Public Functions
  ***********************/
 // Sets up the socket and receives data.
-void CdpReceiver_Create(char * group_string, uint16_t port);
+void CdpReceiver_Create(char * group_string, uint16_t port, char * iface_string);
 
 // Add a specific handler for a data item.
 void CdpReceiver_RegisterDataItemHandler(uint16_t type, cdp_data_item_handler_t handler);

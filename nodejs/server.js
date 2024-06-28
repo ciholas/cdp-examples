@@ -1,6 +1,7 @@
-const PORT = 7667;
-const HOST = '0.0.0.0';
-const GROUP = '239.255.76.67' // multicast address
+const prompt = require('prompt-sync')({sigint: true});
+const GROUP = prompt('GROUP: '); // multicast address
+const PORT = prompt('PORT: ');
+const HOST = prompt('IFACE: ');
 
 const cdpListener = require('./cdp_listener').cdpListener;
 

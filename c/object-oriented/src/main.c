@@ -14,6 +14,8 @@
 #define _ARGV_INDEX__GROUP  1
 // Index of the UDP port program argument
 #define _ARGV_INDEX__PORT   2
+// Index of the network interface IP to bind socket to
+#define _ARGV_INDEX__IFACE  3
 
 
 /***********************
@@ -47,12 +49,13 @@ static void _ExampleDistanceHandler(cdp_header_t * header, void * data, uint16_t
 // Start of program
 int main(int argc,char **argv) {
 
-    if(argc != 3){
+    if(argc != 4){
         Print_ExitOnMessage(
             argc == 1 ? 0 : 1,
-            "Usage: %s GROUP PORT\r\n"
+            "Usage: %s GROUP PORT IFACE\r\n"
             "   GROUP - IP to listen on (ie: 239.255.76.67)\r\n"
-            "    PORT - Port to listen on (ie: 7667)\r\n", argv[0]);
+            "    PORT - Port to listen on (ie: 7667)\r\n"
+            "    IFACE - IP of network interface to bind socket to (ie: 127.0.0.1)\r\n", argv[0]);
     }
 
     Print_Line("Started CDP C Example Program");
@@ -65,7 +68,7 @@ int main(int argc,char **argv) {
     // CdpReceiver_RegisterDataItemHandler(CDP_DATA_ITEM__DISTANCE_V2, _ExampleDistanceHandler);
 
     // Start receiving (this loops and doesn't return)
-    CdpReceiver_Create(argv[_ARGV_INDEX__GROUP], atoi(argv[_ARGV_INDEX__PORT]));
+    CdpReceiver_Create(argv[_ARGV_INDEX__GROUP], atoi(argv[_ARGV_INDEX__PORT]), argv[_ARGV_INDEX__IFACE]);
 
     return 0;
 }

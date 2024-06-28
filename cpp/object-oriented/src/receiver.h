@@ -24,7 +24,7 @@ public:
     // Class Functions //
     /////////////////////
     // Constructs this.
-    explicit CdpReceiver(char * group_string, uint16_t port);
+    explicit CdpReceiver(char * group_string, uint16_t port, char * iface_string);
 
     // Destroys this.
     ~CdpReceiver(void);
